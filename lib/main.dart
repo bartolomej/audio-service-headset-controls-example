@@ -25,12 +25,28 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:record/record.dart';
 
 // You might want to provide this using dependency injection rather than a
 // global variable.
 late AudioHandler _audioHandler;
+late AudioRecorder _audioRecorder;
+
+Future<void> toggleRecording() async {
+  if (await _audioRecorder.isRecording()) {
+    _audioRecorder.stop();
+  } else {
+    // Ignore returned stream for demo purposes
+    _audioRecorder.startStream(RecordConfig(
+      encoder: AudioEncoder.pcm16bits,
+      numChannels: 2,
+      sampleRate: 44100,
+    ));
+  }
+}
 
 Future<void> main() async {
+  _audioRecorder = AudioRecorder();
   _audioHandler = await AudioService.init(
     builder: () => AudioPlayerHandler(),
     config: const AudioServiceConfig(
@@ -93,6 +109,7 @@ class MainScreen extends StatelessWidget {
                       _button(Icons.play_arrow, _audioHandler.play),
                     _button(Icons.stop, _audioHandler.stop),
                     _button(Icons.fast_forward, _audioHandler.fastForward),
+                    _button(Icons.mic, toggleRecording)
                   ],
                 );
               },
@@ -140,7 +157,7 @@ class MainScreen extends StatelessWidget {
 
   IconButton _button(IconData iconData, VoidCallback onPressed) => IconButton(
         icon: Icon(iconData),
-        iconSize: 64.0,
+        iconSize: 50.0,
         onPressed: onPressed,
       );
 }
