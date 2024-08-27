@@ -1,4 +1,4 @@
-package com.ryanheise.audioserviceexample;
+package com.pensive.audioserviceexample;
 
 import io.flutter.embedding.android.FlutterActivity;
 
