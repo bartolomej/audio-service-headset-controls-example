@@ -35,6 +35,7 @@ late AudioRecorder _audioRecorder;
 Future<void> toggleRecording() async {
   if (await _audioRecorder.isRecording()) {
     _audioRecorder.stop();
+    print("microphone stopped listening");
   } else {
     // Ignore returned stream for demo purposes
     _audioRecorder.startStream(RecordConfig(
@@ -42,6 +43,7 @@ Future<void> toggleRecording() async {
       numChannels: 2,
       sampleRate: 44100,
     ));
+    print("microphone started listening");
   }
 }
 
@@ -202,10 +204,16 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   // your audio playback logic in one place.
 
   @override
-  Future<void> play() => _player.play();
+  Future<void> play() async {
+    print("play received");
+    await _player.play();
+  }
 
   @override
-  Future<void> pause() => _player.pause();
+  Future<void> pause() async {
+    print("pause received");
+    _player.pause();
+  }
 
   @override
   Future<void> seek(Duration position) => _player.seek(position);
